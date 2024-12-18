@@ -27,5 +27,6 @@ let package = Package(
                         .when(platforms: [.linux, .macOS])),
                 .define("MDB_USE_ROBUST", to: "0"),
             ]),
-    ]
+    ],
+    cLanguageStandard: .c11
 )
