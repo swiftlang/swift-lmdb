@@ -3704,8 +3704,9 @@ mdb_page_flush(MDB_txn *txn, int keep)
 #else
 	struct iovec iov[MDB_COMMIT_PAGES];
 	HANDLE fd = env->me_fd;
+	ssize_t wres;
 #endif
-	ssize_t		wsize = 0, wres;
+	ssize_t		wsize = 0;
 	MDB_OFF_T	wpos = 0, next_pos = 1; /* impossible pos, so pos != next_pos */
 	int			n = 0;
 
@@ -3873,10 +3874,11 @@ retry_seek:
 		* We start with the last one so that all the others should already be complete and
 		* we reduce thread suspend/resuming (in practice, typically about 99.5% of writes are
 		* done after the last write is done) */
+		DWORD ovres;
 		rc = 0;
 		while (--async_i >= 0) {
 			if (ov[async_i].hEvent) {
-				if (!GetOverlappedResult(fd, &ov[async_i], &wres, TRUE)) {
+				if (!GetOverlappedResult(fd, &ov[async_i], &ovres, TRUE)) {
 					rc = ErrCode(); /* Continue on so that all the event signals are reset */
 				}
 			}
