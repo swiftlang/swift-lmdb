@@ -1544,7 +1544,7 @@ struct MDB_env {
 #if !(MDB_MAXKEYSIZE)
 	unsigned int	me_maxkey;	/**< max size of a key */
 #endif
-	int		me_live_reader;		/**< have liveness lock in reader table */
+	_Atomic int	me_live_reader;		/**< have liveness lock in reader table */ // Changed to _Atomic to support IndexStoreDB
 #ifdef _WIN32
 	int		me_pidquery;		/**< Used in OpenProcess */
 	OVERLAPPED	*ov;			/**< Used for for overlapping I/O requests */
